@@ -18,10 +18,7 @@ let package = Package(
         ),
         .testTarget(
             name: "LMStudioKitTests",
-            dependencies: [
-                "LMStudioKit",
-                .product(name: "Testing", package: "swift-testing")
-            ]
+            dependencies: ["LMStudioKit"]
         ),
     ]
 )
