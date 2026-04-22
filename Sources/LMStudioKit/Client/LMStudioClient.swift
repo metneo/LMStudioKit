@@ -267,7 +267,7 @@ public actor LMStudioClient {
             }
         }
         #else
-        throw LMStudioError.streamingError("Streaming is not supported on this platform")
+        throw LMStudioError.streamingError("Streaming is only supported on Darwin platforms (macOS, iOS, etc.)")
         #endif
     }
 
