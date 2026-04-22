@@ -8,3 +8,4 @@ DerivedData/
 Packages/
 build/
 xcworkspacedata
+.env

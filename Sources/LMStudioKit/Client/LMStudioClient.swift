@@ -117,7 +117,7 @@ public actor LMStudioClient {
     /// ```
     public func chat(request: ChatRequest) async throws -> ChatResponse {
         let encoder = JSONEncoder()
-        let body = try encoder.encode(request)
+        let body = try encoder.encode(request)        
         let urlRequest = try await makeRequest(path: "api/v1/chat", method: "POST", body: body)
         return try await performRequest(urlRequest)
     }

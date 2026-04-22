@@ -11,7 +11,7 @@ struct ChatInputTests {
         let encoder = JSONEncoder()
         let data = try encoder.encode(input)
         let json = String(data: data, encoding: .utf8)!
-        #expect(json.contains("\"type\":\"message\""))
+        #expect(json.contains("\"type\":\"text\""))
         #expect(json.contains("\"content\":\"Hello, world!\""))
     }
 
@@ -27,6 +27,17 @@ struct ChatInputTests {
 
     @Test
     func textInputDecoding() throws {
+        let json = #"{"type": "text", "content": "Hello!"}"#.data(using: .utf8)!
+        let input = try JSONDecoder().decode(ChatInput.self, from: json)
+        if case .text(let content) = input {
+            #expect(content == "Hello!")
+        } else {
+            Issue.record("Expected text input")
+        }
+    }
+
+    @Test
+    func textInputDecodingLegacyMessageType() throws {
         let json = #"{"type": "message", "content": "Hello!"}"#.data(using: .utf8)!
         let input = try JSONDecoder().decode(ChatInput.self, from: json)
         if case .text(let content) = input {
