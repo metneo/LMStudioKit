@@ -1,6 +1,63 @@
-import Testing
-@testable import LMStudioKit
+import Darwin
 import Foundation
+import Testing
+
+@testable import LMStudioKit
+
+private enum LMStudioIntegrationTestEnvironment {
+    static let isEndpointReachable: Bool = {
+        canConnectToLocalhost(port: 1234)
+    }()
+
+    private static func canConnectToLocalhost(port: UInt16) -> Bool {
+        var hints = addrinfo(
+            ai_flags: 0,
+            ai_family: AF_UNSPEC,
+            ai_socktype: SOCK_STREAM,
+            ai_protocol: IPPROTO_TCP,
+            ai_addrlen: 0,
+            ai_canonname: nil,
+            ai_addr: nil,
+            ai_next: nil
+        )
+
+        var result: UnsafeMutablePointer<addrinfo>?
+        let status = "localhost".withCString { hostPointer in
+            String(port).withCString { servicePointer in
+                getaddrinfo(hostPointer, servicePointer, &hints, &result)
+            }
+        }
+
+        guard status == 0, let start = result else {
+            return false
+        }
+
+        defer { freeaddrinfo(start) }
+
+        var current = start
+        while true {
+            let socketDescriptor = socket(
+                current.pointee.ai_family, current.pointee.ai_socktype, current.pointee.ai_protocol)
+            if socketDescriptor >= 0 {
+                defer { close(socketDescriptor) }
+
+                if connect(socketDescriptor, current.pointee.ai_addr, current.pointee.ai_addrlen)
+                    == 0
+                {
+                    return true
+                }
+            }
+
+            guard let next = current.pointee.ai_next else {
+                break
+            }
+
+            current = next
+        }
+
+        return false
+    }
+}
 
 // MARK: - LMStudioClient Integration Tests
 //
@@ -9,6 +66,7 @@ import Foundation
 //
 // Run with: swift test
 
+@Suite(.enabled(if: LMStudioIntegrationTestEnvironment.isEndpointReachable))
 struct LMStudioClientIntegrationTests {
     private let LM_STUDIO_HOST = "http://localhost:1234"
 
