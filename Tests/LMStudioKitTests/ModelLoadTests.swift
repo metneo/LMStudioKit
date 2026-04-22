@@ -85,3 +85,50 @@ struct ModelUnloadResponseTests {
         #expect(response.instanceId == "inst-123")
     }
 }
+
+// MARK: - Additional ModelLoadRequest Tests
+
+struct ModelLoadRequestAdditionalTests {
+    @Test
+    func allFieldsEncoding() throws {
+        let request = ModelLoadRequest(
+            model: "llama-3",
+            contextLength: 4096,
+            evalBatchSize: 8,
+            flashAttention: true,
+            numExperts: 4,
+            offloadKvCacheToGpu: true,
+            echoLoadConfig: true
+        )
+        let data = try JSONEncoder().encode(request)
+        let json = try JSONSerialization.jsonObject(with: data) as! [String: Any]
+        #expect(json["context_length"] as? Int == 4096)
+        #expect(json["num_experts"] as? Int == 4)
+        #expect(json["offload_kv_cache_to_gpu"] as? Bool == true)
+        #expect(json["echo_load_config"] as? Bool == true)
+    }
+
+    @Test
+    func encodingKeysAreSnakeCase() throws {
+        let request = ModelLoadRequest(model: "m", contextLength: 1024, flashAttention: true)
+        let data = try JSONEncoder().encode(request)
+        let json = String(data: data, encoding: .utf8)!
+        #expect(json.contains("context_length"))
+        #expect(json.contains("flash_attention"))
+        #expect(!json.contains("contextLength"))
+    }
+}
+
+// MARK: - Additional ModelLoadResponse Tests
+
+struct ModelLoadResponseAdditionalTests {
+    @Test
+    func decodingWithLoadConfig() throws {
+        let json = #"{"status": "loaded", "instance_id": "inst-1", "load_time_seconds": 2.5, "type": "llm", "load_config": {"context_length": 4096, "flash_attention": true}}"#.data(using: .utf8)!
+        let response = try JSONDecoder().decode(ModelLoadResponse.self, from: json)
+        #expect(response.loadConfig?.contextLength == 4096)
+        #expect(response.loadConfig?.flashAttention == true)
+        #expect(response.loadTimeSeconds == 2.5)
+        #expect(response.type == "llm")
+    }
+}

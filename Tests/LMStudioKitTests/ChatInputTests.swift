@@ -57,4 +57,36 @@ struct ChatInputTests {
             Issue.record("Expected image input")
         }
     }
+
+    @Test
+    func unknownTypeThrows() {
+        let json = #"{"type": "video", "content": "..."}"#.data(using: .utf8)!
+        #expect(throws: (any Error).self) {
+            _ = try JSONDecoder().decode(ChatInput.self, from: json)
+        }
+    }
+
+    @Test
+    func textInputRoundTrip() throws {
+        let original = ChatInput.text(content: "Round-trip text")
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(ChatInput.self, from: data)
+        if case .text(let content) = decoded {
+            #expect(content == "Round-trip text")
+        } else {
+            Issue.record("Expected text input after round-trip")
+        }
+    }
+
+    @Test
+    func imageInputRoundTrip() throws {
+        let original = ChatInput.image(dataURL: "data:image/png;base64,abc123")
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(ChatInput.self, from: data)
+        if case .image(let dataURL) = decoded {
+            #expect(dataURL == "data:image/png;base64,abc123")
+        } else {
+            Issue.record("Expected image input after round-trip")
+        }
+    }
 }

@@ -27,4 +27,17 @@ struct LMStudioConfigTests {
         #expect(config.baseURL == URL(string: "http://localhost:1234"))
         #expect(config.apiToken == token)
     }
+
+    @Test
+    func withEmptyAPIToken() {
+        let config = LMStudioConfig(baseURL: URL(string: "http://localhost:1234")!, apiToken: "")
+        #expect(config.apiToken == "")
+    }
+
+    @Test
+    func defaultBaseURLIsLocalhost1234() {
+        let config = LMStudioConfig()
+        #expect(config.baseURL.host == "localhost")
+        #expect(config.baseURL.port == 1234)
+    }
 }

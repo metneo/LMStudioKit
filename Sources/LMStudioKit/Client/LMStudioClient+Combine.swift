@@ -1,4 +1,6 @@
 import Foundation
+
+#if canImport(Combine)
 import Combine
 
 // MARK: - Chat Stream Publisher
@@ -46,3 +48,4 @@ extension LMStudioClient {
         return subject.eraseToAnyPublisher()
     }
 }
+#endif

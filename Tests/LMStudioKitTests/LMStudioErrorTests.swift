@@ -28,4 +28,28 @@ struct LMStudioErrorTests {
         #expect(LMStudioError.httpError(statusCode: 404, data: Data()).errorDescription == "HTTP error: 404")
         #expect(LMStudioError.httpError(statusCode: 500, data: Data()).errorDescription == "HTTP error: 500")
     }
+
+    @Test
+    func httpErrorPreservesData() {
+        let body = "Not Found".data(using: .utf8)!
+        let error = LMStudioError.httpError(statusCode: 404, data: body)
+        if case .httpError(let code, let data) = error {
+            #expect(code == 404)
+            #expect(data == body)
+        } else {
+            Issue.record("Expected httpError")
+        }
+    }
+
+    @Test
+    func streamingErrorWithEmptyMessage() {
+        let error = LMStudioError.streamingError("")
+        #expect(error.errorDescription == "Streaming error: ")
+    }
+
+    @Test
+    func isLocalizedError() {
+        let error: any LocalizedError = LMStudioError.invalidResponse
+        #expect(error.errorDescription != nil)
+    }
 }

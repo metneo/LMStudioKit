@@ -54,4 +54,46 @@ struct AnyCodableTests {
         let outer = (any.value as? [String: Any])?["outer"] as? [String: Any]
         #expect(outer?["inner"] as? String == "value")
     }
+
+    @Test
+    func nullValue() throws {
+        let json = "null".data(using: .utf8)!
+        let any = try JSONDecoder().decode(AnyCodable.self, from: json)
+        #expect(any.value is Void)
+    }
+
+    @Test
+    func encodingString() throws {
+        let any = try JSONDecoder().decode(AnyCodable.self, from: #""hello""#.data(using: .utf8)!)
+        let encoded = try JSONEncoder().encode(any)
+        let roundTripped = try JSONDecoder().decode(AnyCodable.self, from: encoded)
+        #expect(roundTripped.value as? String == "hello")
+    }
+
+    @Test
+    func encodingInt() throws {
+        let json = "42".data(using: .utf8)!
+        let any = try JSONDecoder().decode(AnyCodable.self, from: json)
+        let encoded = try JSONEncoder().encode(any)
+        let roundTripped = try JSONDecoder().decode(AnyCodable.self, from: encoded)
+        #expect(roundTripped.value as? Int == 42)
+    }
+
+    @Test
+    func encodingDouble() throws {
+        let json = "3.14".data(using: .utf8)!
+        let any = try JSONDecoder().decode(AnyCodable.self, from: json)
+        let encoded = try JSONEncoder().encode(any)
+        let roundTripped = try JSONDecoder().decode(AnyCodable.self, from: encoded)
+        #expect(roundTripped.value as? Double == 3.14)
+    }
+
+    @Test
+    func encodingBool() throws {
+        let json = "false".data(using: .utf8)!
+        let any = try JSONDecoder().decode(AnyCodable.self, from: json)
+        let encoded = try JSONEncoder().encode(any)
+        let roundTripped = try JSONDecoder().decode(AnyCodable.self, from: encoded)
+        #expect(roundTripped.value as? Bool == false)
+    }
 }

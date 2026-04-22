@@ -1,4 +1,7 @@
 import Foundation
+#if canImport(FoundationNetworking)
+import FoundationNetworking
+#endif
 
 /// A thread-safe client for interacting with the LM Studio REST API.
 ///
@@ -206,6 +209,7 @@ public actor LMStudioClient {
         let body = try encoder.encode(streamingRequest)
         let urlRequest = try await makeRequest(path: "api/v1/chat", method: "POST", body: body)
 
+        #if canImport(Darwin)
         let (bytes, response) = try await session.bytes(for: urlRequest)
 
         guard let httpResponse = response as? HTTPURLResponse else {
@@ -262,6 +266,9 @@ public actor LMStudioClient {
                 }
             }
         }
+        #else
+        throw LMStudioError.streamingError("Streaming is not supported on this platform")
+        #endif
     }
 
     // MARK: - Streaming
