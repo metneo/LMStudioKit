@@ -14,7 +14,8 @@ A Swift client library for interacting with LM Studio's native REST API, enablin
 
 ## Requirements
 
-- Swift 6.0+
+- Swift 6.0+ (default manifest)
+- Swift 5.9+ (legacy manifest via `Package@swift-5.9.swift`)
 - macOS 12.0+ or iOS 15.0+
 - LM Studio running locally (default: `http://localhost:1234`)
 
