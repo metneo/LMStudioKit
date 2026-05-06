@@ -138,7 +138,7 @@ for try await event in client.chatStream(request: request) {
 }
 ```
 
-For plugins, use the ``Integration/plugin`` case:
+For plugins, use the ``Integration/plugin(id:allowedTools:)`` case:
 
 ```swift
 let pluginIntegration = Integration.plugin(
@@ -205,7 +205,7 @@ print("Downloaded: \(status.downloadedBytes ?? 0) / \(status.totalSizeBytes ?? 0
 
 ### Client
 
-- <doc:GettingStarted>
+- <doc:Getting-Started>
 - ``LMStudioConfig``
 - ``LMStudioClient``
 
@@ -220,12 +220,12 @@ print("Downloaded: \(status.downloadedBytes ?? 0) / \(status.totalSizeBytes ?? 0
 ### Tools
 
 - ``Integration``
-- ``OutputItem/toolCall``
-- ``OutputItem/invalidToolCall``
-- ``SSEEvent/toolCallStart``
-- ``SSEEvent/toolCallArguments``
-- ``SSEEvent/toolCallSuccess``
-- ``SSEEvent/toolCallFailure``
+- ``OutputItem/toolCall(tool:arguments:output:providerInfo:)``
+- ``OutputItem/invalidToolCall(reason:metadata:)``
+- ``SSEEvent/toolCallStart(_:)``
+- ``SSEEvent/toolCallArguments(_:)``
+- ``SSEEvent/toolCallSuccess(_:)``
+- ``SSEEvent/toolCallFailure(_:)``
 
 ### Models
 
@@ -243,25 +243,25 @@ print("Downloaded: \(status.downloadedBytes ?? 0) / \(status.totalSizeBytes ?? 0
 
 The ``SSEEvent`` enum provides all streaming event types:
 
-- ``SSEEvent/chatStart`` - Chat session started
-- ``SSEEvent/modelLoadStart`` - Model loading started
-- ``SSEEvent/modelLoadProgress`` - Model loading progress
-- ``SSEEvent/modelLoadEnd`` - Model loading completed
-- ``SSEEvent/promptProcessingStart`` - Prompt processing started
-- ``SSEEvent/promptProcessingProgress`` - Prompt processing progress
-- ``SSEEvent/promptProcessingEnd`` - Prompt processing completed
-- ``SSEEvent/reasoningStart`` - Reasoning phase started
-- ``SSEEvent/reasoningDelta`` - Reasoning content delta
-- ``SSEEvent/reasoningEnd`` - Reasoning phase completed
-- ``SSEEvent/toolCallStart`` - Tool call started
-- ``SSEEvent/toolCallArguments`` - Tool call arguments
-- ``SSEEvent/toolCallSuccess`` - Tool call succeeded
-- ``SSEEvent/toolCallFailure`` - Tool call failed
-- ``SSEEvent/messageStart`` - Message output started
-- ``SSEEvent/messageDelta`` - Message content delta
-- ``SSEEvent/messageEnd`` - Message output completed
-- ``SSEEvent/error`` - Error event
-- ``SSEEvent/chatEnd`` - Chat session completed
+- ``SSEEvent/chatStart(_:)``
+- ``SSEEvent/modelLoadStart(_:)``
+- ``SSEEvent/modelLoadProgress(_:)``
+- ``SSEEvent/modelLoadEnd(_:)``
+- ``SSEEvent/promptProcessingStart``
+- ``SSEEvent/promptProcessingProgress(_:)``
+- ``SSEEvent/promptProcessingEnd``
+- ``SSEEvent/reasoningStart``
+- ``SSEEvent/reasoningDelta(_:)``
+- ``SSEEvent/reasoningEnd``
+- ``SSEEvent/toolCallStart(_:)``
+- ``SSEEvent/toolCallArguments(_:)``
+- ``SSEEvent/toolCallSuccess(_:)``
+- ``SSEEvent/toolCallFailure(_:)``
+- ``SSEEvent/messageStart``
+- ``SSEEvent/messageDelta(_:)``
+- ``SSEEvent/messageEnd``
+- ``SSEEvent/error(_:)``
+- ``SSEEvent/chatEnd(_:)``
 
 ### Response Statistics
 

@@ -3,10 +3,10 @@ import Foundation
 /// A single output item from a chat response.
 ///
 /// ``OutputItem`` represents one chunk of the model's output, which can be:
-/// - ``message`` - A text message
-/// - ``toolCall`` - A tool/function call request
-/// - ``reasoning`` - Intermediate reasoning (if reasoning is enabled)
-/// - ``invalidToolCall`` - A tool call that failed validation
+/// - ``message(content:)`` - A text message
+/// - ``toolCall(tool:arguments:output:providerInfo:)`` - A tool/function call request
+/// - ``reasoning(content:)`` - Intermediate reasoning (if reasoning is enabled)
+/// - ``invalidToolCall(reason:metadata:)`` - A tool call that failed validation
 ///
 /// ## See Also
 ///

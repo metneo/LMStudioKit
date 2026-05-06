@@ -85,7 +85,7 @@ public actor LMStudioClient {
     ///   and generation parameters (temperature, max tokens, etc.).
     /// - Returns: A ``ChatResponse`` containing the model's output and ``ResponseStats``.
     /// - Throws: ``LMStudioError/invalidResponse`` if the server returns an invalid response,
-    ///   or ``LMStudioError/httpError(_:_:)`` for HTTP error status codes.
+    ///   or ``LMStudioError/httpError(statusCode:data:)`` for HTTP error status codes.
     ///
     /// ## See Also
     ///
@@ -128,19 +128,19 @@ public actor LMStudioClient {
     /// Each event represents a stage in the streaming response lifecycle.
     ///
     /// - Parameter request: The ``ChatRequest`` containing model and input details.
-    /// - Returns: An ``AsyncThrowingStream`` of ``SSEEvent`` values.
+    /// - Returns: An `AsyncThrowingStream` of  `SSEEvent` values.
     /// - Throws: ``LMStudioError`` for request or streaming errors.
     ///
     /// ## Streaming Lifecycle
     ///
     /// The stream emits events in this approximate order:
-    /// 1. ``SSEEvent/chatStart`` - Chat session initialized
-    /// 2. ``SSEEvent/modelLoadStart`` / ``SSEEvent/modelLoadProgress`` / ``SSEEvent/modelLoadEnd`` - Model loading
+    /// 1. ``SSEEvent/chatStart(_:)`` - Chat session initialized
+    /// 2. ``SSEEvent/modelLoadProgress(_:)`` / ``SSEEvent/modelLoadProgress(_:)`` / ``SSEEvent/modelLoadEnd(_:)`` - Model loading
     /// 3. ``SSEEvent/promptProcessingStart`` / ``SSEEvent/promptProcessingEnd`` - Prompt processing
-    /// 4. ``SSEEvent/reasoningStart`` / ``SSEEvent/reasoningDelta`` / ``SSEEvent/reasoningEnd`` - Reasoning (if enabled)
-    /// 5. ``SSEEvent/messageDelta`` - Incremental text output
-    /// 6. ``SSEEvent/toolCallStart`` / ``SSEEvent/toolCallArguments`` / ``SSEEvent/toolCallSuccess`` - Tool calls (if triggered)
-    /// 7. ``SSEEvent/chatEnd`` - Final response with stats
+    /// 4. ``SSEEvent/reasoningStart`` / ``SSEEvent/reasoningDelta(_:)`` / ``SSEEvent/reasoningEnd`` - Reasoning (if enabled)
+    /// 5. ``SSEEvent/messageDelta(_:)`` - Incremental text output
+    /// 6. ``SSEEvent/toolCallStart(_:)`` / ``SSEEvent/toolCallArguments(_:)`` / ``SSEEvent/toolCallSuccess(_:)`` - Tool calls (if triggered)
+    /// 7. ``SSEEvent/chatEnd(_:)`` - Final response with stats
     ///
     /// ## See Also
     ///
